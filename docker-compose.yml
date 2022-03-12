@@ -1,0 +1,76 @@
+version: '3.6'
+
+services:
+
+  api-rest-tasker:
+    build:
+      context: .
+      dockerfile: ./delivery/Dockerfile
+      target: prod
+    depends_on:
+      - db
+      - provision-db
+    volumes:
+      - .:/opt/app:delegated
+
+  app:
+    build:
+      context: .
+      dockerfile: ./delivery/Dockerfile
+      target: dev
+    depends_on:
+      - db
+      - provision-db
+    volumes:
+      - .:/opt/app:delegated
+    environment:
+      - DBHOST=db
+    expose:
+      - "8080"
+      - "8081"
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    
+
+  # Postgres database
+  db:
+    image: postgres:11.5
+    environment:
+      - POSTGRES_DB=tasker
+      - POSTGRES_USER=tasker
+      - POSTGRES_PASSWORD=tasker
+    command: ["postgres", "-c", "log_statement=all"]      
+    expose:
+      - "5432"
+    ports:
+      - "5432:5432"
+
+  # Simple provision, move to liquibase...
+  provision-db:
+    image: postgres:11.5
+    command: ["psql", "-f", "./delivery/creation.sql"]
+
+    depends_on:
+      - db
+
+    entrypoint:
+      - sh
+      - -c
+      - |
+        ./delivery/wait-for-it.sh --timeout=160 db:5432
+        sleep 2
+        exec "$$0" "$$@"
+
+    environment:
+      - PGUSER=tasker
+      - PGPASSWORD=tasker
+      - PGDATABASE=tasker
+      - PGHOST=db
+    working_dir: /opt/app
+    volumes:
+      - .:/opt/app:delegated
+
+
+networks:
+  default:

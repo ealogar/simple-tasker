@@ -1,0 +1,53 @@
+template: Hello, %s!
+defaultName: Stranger
+
+server:
+  registerDefaultExceptionMappers: false
+  
+logging:
+  level: INFO
+  loggers:
+    org.dropwizard: DEBUG
+
+database:
+  driverClass: org.postgresql.Driver
+  user: tasker
+  password: tasker
+  url: jdbc:postgresql://${DBHOST:-localhost}:5432/tasker
+
+  properties:
+    charSet: UTF-8
+
+  #maximum amount of time to wait on an empty pool before throwing an exception
+  maxWaitForConnection: 5s
+  validationQuery: "/* MyService Health Check */ SELECT 1"
+
+  # the timeout before a connection validation queries fail
+  validationQueryTimeout: 3s
+
+  # the minimum number of connections to keep open
+  minSize: 3
+  # the maximum number of connections to keep open
+  maxSize: 10
+
+  checkConnectionWhileIdle: false
+
+  # the amount of time to sleep between runs of the idle connection validation, abandoned cleaner and idle pool resizing
+  evictionInterval: 10s
+
+  # the minimum amount of time an connection must sit idle in the pool before it is eligible for eviction
+  minIdleTime: 1 minute
+
+health:
+  delayedShutdownHandlerEnabled: true
+  shutdownWaitPeriod: 10s
+  healthChecks:
+    - name: deadlocks
+      critical: true
+    - name: template
+      critical: false
+      schedule:
+        checkInterval: 2500ms
+        downtimeInterval: 10s
+        failureAttempts: 2
+        successAttempts: 1
