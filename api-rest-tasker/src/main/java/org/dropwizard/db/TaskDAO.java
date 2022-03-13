@@ -13,11 +13,11 @@ import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
 public interface TaskDAO {
 
-    @SqlQuery("select id, description, dueDate from tasks where id = :id")
+    @SqlQuery("select id, description, dueDate, completed from tasks where id = :id")
     @RegisterBeanMapper(Task.class)
     Task getTaskById(@Bind("id") Long id);
 
-    @SqlQuery("select id, description, dueDate FROM tasks ORDER BY dueDate")
+    @SqlQuery("select id, description, dueDate, completed FROM tasks ORDER BY dueDate")
     @RegisterBeanMapper(Task.class)
     List<Task> getAllTasks();
 
@@ -26,7 +26,7 @@ public interface TaskDAO {
     @RegisterBeanMapper(Task.class)
     Task insert(@BindBean Task task);
 
-    @SqlUpdate("update tasks set description = :description, dueDate = :dueDate where id = :id")
+    @SqlUpdate("update tasks set description = :description, dueDate = :dueDate, completed = :completed where id = :id")
     @GetGeneratedKeys
     @RegisterBeanMapper(Task.class)
     Task update(@BindBean Task task);

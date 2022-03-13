@@ -7,15 +7,14 @@ import App from './App';
 // https://github.com/testing-library/jest-dom
 // roles: https://www.w3.org/TR/html-aria/#docconformance
 
-test('renders learn react link', () => {
+test('renders Tasker link', () => {
   render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
+  const linkElement = screen.getByText(/Tasker/i);
   expect(linkElement).toBeInTheDocument();
 });
 
-test('renders new button to add task', () => {
+test('renders loading text', () => {
   render(<App />);
-  const buttonNew = screen.getByRole("button", {"name": /New/i});
-  expect(buttonNew).toBeInTheDocument();
-  expect(buttonNew).toBeEnabled();
+  const loadingText = screen.getByText(/Loading/i);
+  expect(loadingText).toBeInTheDocument();
 });

@@ -2,27 +2,30 @@ version: '3.6'
 
 services:
 
-  api-rest-tasker:
+  # dev and build container for react ui
+  app-fe:
     build:
-      context: .
+      context: ./ui-tasker
       dockerfile: ./delivery/Dockerfile
-      target: prod
+      target: dev
     depends_on:
-      - db
-      - provision-db
-    volumes:
-      - .:/opt/app:delegated
-
-  app:
+      - app-be
+    environment:
+      - BASEPATH_BE=http://app-be:8080
+    expose:
+      - "3000"
+    ports:
+      - "3000:3000"
+  
+  # dev and build container for api-rest
+  app-be:
     build:
-      context: .
+      context: ./api-rest-tasker
       dockerfile: ./delivery/Dockerfile
       target: dev
     depends_on:
       - db
       - provision-db
-    volumes:
-      - .:/opt/app:delegated
     environment:
       - DBHOST=db
     expose:
@@ -31,7 +34,32 @@ services:
     ports:
       - "8080:8080"
       - "8081:8081"
-    
+
+  ui-tasker:
+    build:
+      context: ./ui-tasker
+      dockerfile: ./delivery/Dockerfile
+      target: prod
+    depends_on:
+      - api-rest-tasker
+    environment:
+      - BASEPATH_BE=http://api-rest-tasker:8080
+    expose:
+      - "80"
+    ports:
+      - "80:80"      
+
+
+  api-rest-tasker:
+    build:
+      context: ./api-rest-tasker
+      dockerfile: ./delivery/Dockerfile
+      target: prod
+    depends_on:
+      - db
+      - provision-db   
+    environment:
+      - DBHOST=db      
 
   # Postgres database
   db:
@@ -49,7 +77,7 @@ services:
   # Simple provision, move to liquibase...
   provision-db:
     image: postgres:11.5
-    command: ["psql", "-f", "./delivery/creation.sql"]
+    command: ["psql", "-f", "creation.sql"]
 
     depends_on:
       - db
@@ -58,7 +86,7 @@ services:
       - sh
       - -c
       - |
-        ./delivery/wait-for-it.sh --timeout=160 db:5432
+        ./wait-for-it.sh --timeout=160 db:5432
         sleep 2
         exec "$$0" "$$@"
 
@@ -69,8 +97,7 @@ services:
       - PGHOST=db
     working_dir: /opt/app
     volumes:
-      - .:/opt/app:delegated
-
+      - ./api-rest-tasker/delivery:/opt/app:delegated
 
 networks:
   default:

@@ -22,7 +22,7 @@ The project has two main components, a GUI with reactJS () and a REST API using 
 To build the different services you can use [docker-compose](https://docs.docker.com/compose/) and run the following:
 
 ```
-docker-compose build app
+docker-compose build
 ```
 
 This will build both frontend and backend services for production and also a local dev containers. we use multi stage dockerfiles, more on [multistage-build](https://docs.docker.com/develop/develop-images/multistage-build/).
@@ -31,18 +31,22 @@ This will build both frontend and backend services for production and also a loc
 For running the tasker, simply run
 
 ```
-docker-compose up app
+docker-compose up app-fe
 ```
 
-This will launch all required images to run ui, api rest, database and provisioners. To open the tasker and test open ```http://localhost:3000``` in a browser.
+This will launch all required images to run ui, api rest, database and provisioners for development. To open the tasker and test, open ```http://localhost:3000``` in a browser.
 
-You can connect to  debug port 8888 depending on your IDE.
+You can connect to dropwizard backenc debug port 8888 depending on your IDE.
 
 You can also test the rest api endpoints from the base url ```http://localhost:8080```; the different endpoints supported are described in  [endpoints](./api-rest-tasker/README.md#endpoints).
 
-1. Build the app `docker-compose` to build your application
+If you run ```docker-compose up app-be```, you will simply run the dropwizard api rest service.
 
-1. To check that your application is running enter url `http://localhost:8080`
+### Run the production containers
+
+Simply run ```docker-compose up ui-tasker```. This will launch the production container for frontend react and for backend dropwizard; it will also use the database and provision db service.
+
+
 
 ## deploy
 
