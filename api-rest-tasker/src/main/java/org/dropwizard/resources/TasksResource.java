@@ -55,7 +55,7 @@ public class TasksResource {
     @PUT
     @Path("/{id}")
     @Timed
-    @Metered(name = "get-task")
+    @Metered(name = "update-task")
     public Task updateTask(@PathParam("id") Long id, @NotNull @Valid Task task) {
         task.setId(id);
         return taskDAO.update(task);

@@ -16,7 +16,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <dropwizard.version>2.1.0-beta.7</dropwizard.version>
         <postgres-jdbc.version>42.3.3</postgres-jdbc.version>
-        <mainClass>org.dropwizard.taskerApplication</mainClass>
+        <mainClass>org.dropwizard.TaskerApplication</mainClass>
     </properties>
 
     <dependencyManagement>

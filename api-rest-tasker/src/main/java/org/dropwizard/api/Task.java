@@ -12,6 +12,7 @@ import io.dropwizard.jackson.JsonSnakeCase;
 @JsonSnakeCase
 public class Task {
   public static final String DATE_FORMAT_PATTERN="dd-MM-yyyy hh:mm";
+
   private Long id;
 
   @NotBlank(message = "Description may not be empty")
@@ -19,10 +20,11 @@ public class Task {
 
   // We just use this jackson annotation and leave jackson use reflection to
   // serialize/deserialize (not complicated names)
-  // FIXME: use snake_case by default in jackson is a better strategy
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_FORMAT_PATTERN)
   @NotNull
   private Date dueDate;
+
+  private boolean completed;
 
   // Jackson deserialize
   public Task() {}
@@ -57,5 +59,17 @@ public class Task {
   public void setDueDate(Date dueDate) {
     this.dueDate = dueDate;
   }
+
+
+  public boolean isCompleted() {
+    return completed;
+  }
+
+
+  public void setCompleted(boolean completed) {
+    this.completed = completed;
+  }
+
+  
 
 }
