@@ -24,6 +24,6 @@ WORKDIR /opt/app
 COPY --from=dev /opt/app/target/api-rest-tasker-1.0-SNAPSHOT.jar ./api-rest-tasker-1.0.jar
 COPY --from=dev /opt/app/config.yml ./
 
-CMD ["java", "-jar", "/opt/app/target/api-rest-tasker-1.0.jar", "server", "config.yml"]
+CMD ["java", "-jar", "/opt/app/api-rest-tasker-1.0.jar", "server", "config.yml"]
 
 EXPOSE 8080

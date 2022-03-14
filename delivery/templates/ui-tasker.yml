@@ -16,7 +16,11 @@ spec:
       - name: ui-tasker
         image: eu-marseille-1.ocir.io/axds7s98uqrj/simple-task/ui-tasker:latest
         imagePullPolicy: Always
+        env:
+          - name: BASEPATH_BE
+            value: http://api-rest-tasker:8080
         ports:
         - name: app
-          containerPort: 3000
-          protocol: TCP
+          containerPort: 80
+      imagePullSecrets:
+        - name: ocirsecret

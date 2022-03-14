@@ -11,7 +11,8 @@ We based on the work described in [https://docs.oracle.com/en-us/iaas/developer-
 
 ## Creating a k8s cluster in OCI
 
-Following the guide [https://docs.oracle.com/en-us/iaas/developer-tutorials/tutorials/node-on-k8s/01oci-node-k8s-summary.htm](https://docs.oracle.com/en-us/iaas/developer-tutorials/tutorials/node-on-k8s/01oci-node-k8s-summary.htm) you create a simple k8s cluster with 3 nodes in one agent pool. Remember to choose **VM.Standard.A1.Flex** as shape for the instances; 
+Following the guide [https://docs.oracle.com/en-us/iaas/developer-tutorials/tutorials/node-on-k8s/01oci-node-k8s-summary.htm](https://docs.oracle.com/en-us/iaas/developer-tutorials/tutorials/node-on-k8s/01oci-node-k8s-summary.htm) you create a simple k8s cluster with 3 nodes in one agent pool. We have chosed **VM.Standard.E4.Flex** (1 OCPU, 16GB RAM) as shape for the instances as it fits the needs of the product by now.
+
 
 ## Prerequites
 
@@ -26,6 +27,18 @@ Generate an auth token for login to docker registry (https://docs.oracle.com/en-
 Install kubectl client if you dont already have it
 
 Follow the instructions in Access YOur cluster in OCI console to get access to your k8s cluster.
+
+You will be using oci to get a KUBECONFIG locally to be able to access the cluster wit kubectl:
+
+```
+oci ce cluster create-kubeconfig --cluster-id ocid1.cluster.oc1.eu-marseille-1.aaaaaaaamep5dbzvkd2bdzeogc45n27rkp3lfqilgt2tyx3tucjmsoo4f6ma --file $HOME/.kube/config --region eu-marseille-1 --token-version 2.0.0  --kube-endpoint PUBLIC_ENDPOINT
+```
+
+```
+export KUBECONFIG=$HOME/.kube/config
+```
+
+enjoy with kubectl ...
 
 
 ## Deploy
@@ -47,6 +60,7 @@ Tag the local images to point to registry:
 ```
 docker tag <image-id> eu-marseille-1.ocir.io/<namespace>/simple-task/ui-tasker:latest
 docker tag <image-id> eu-marseille-1.ocir.io/<namespace>/simple-task/api-rest-tasker:latest
+docker tag <image-id> eu-marseille-1.ocir.io/<namespace>/simple-task/postgres:11-5
 ```
 
 Push them to the registry with ```docker push <full-image-tag>```
@@ -57,13 +71,15 @@ Create a secret for the application in k8s
 kubectl create secret docker-registry ocirsecret --docker-server=eu-marseille-1.ocir.io  --docker-username='<namespace>/ealogar@gmail.com' --docker-password='<auth-token>'  --docker-email='ealogar@gmail.com'
 ```
 
+Remember to replace the placeholder for namespace and auth-token
+
 Finally apply the kubernetes templates!
 
 ```
 kubectl apply -f templates/load-balancer.yml
+kubectl apply -f templates/ddbb.yml
 kubectl apply -f templates/ui-tasker.yml
 kubectl apply -f templates/api-rest-tasker.yml
-kubectl apply -f templates/ddbb.yml
 ```
 
 ## Future

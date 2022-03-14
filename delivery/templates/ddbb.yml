@@ -1,0 +1,122 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: ddbb
+  labels:
+    app: ddbb
+spec:
+  selector:
+    app: ddbb
+  type: ClusterIP
+  ports:
+    - name: postgres
+      port: 5432
+      targetPort: postgres
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ddbb
+spec:
+  selector:
+    matchLabels:
+      app: ddbb
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: ddbb
+    spec:
+      containers:
+      - name: api-rest-tasker
+        image: eu-marseille-1.ocir.io/axds7s98uqrj/simple-task/postgres:11-5
+        imagePullPolicy: Always
+        command:
+           - docker-entrypoint.sh
+           - -c
+           - log_statement=all
+        env:
+          - name: POSTGRES_DB
+            value: tasker
+          - name: POSTGRES_USER
+            value: tasker
+          - name: PGPASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: ddbb
+                key: PGPASSWORD
+        ports:
+        - name: postgres
+          containerPort: 5432
+      imagePullSecrets:
+        - name: ocirsecret          
+
+---
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: provision-db
+  labels:
+    job: provision-db
+spec:
+  template:
+    metadata:
+      labels:
+        job: provision-db
+        type: job
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - name: pg-provision-ddbb
+          image: eu-marseille-1.ocir.io/axds7s98uqrj/simple-task/postgres:11-5
+          env:
+            - name: PGUSER
+              value: tasker
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ddbb
+                  key: PGPASSWORD
+            - name: PGDATABASE
+              value: tasker
+            - name: PGHOST
+              value: ddbb
+          volumeMounts:
+            - mountPath: /provision
+              name: provision
+          command:
+            - psql
+            - -f
+            - /provision/creation.sql
+      imagePullSecrets:
+        - name: ocirsecret            
+      volumes:
+        - name: provision
+          secret:
+            secretName: ddbb
+            defaultMode: 0744
+            items:
+              - key: creation.sql
+                path: creation.sql
+      restartPolicy: Never
+
+---
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: ddbb
+  labels:
+    app: ddbb
+type: Opaque
+stringData:
+  PGPASSWORD: tasker
+  creation.sql: |-
+    CREATE TABLE IF NOT EXISTS tasks (
+        id SERIAL PRIMARY KEY,
+        description VARCHAR(256),
+        dueDate TIMESTAMP,
+        completed BOOLEAN DEFAULT FALSE
+    );

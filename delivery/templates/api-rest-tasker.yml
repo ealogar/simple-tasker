@@ -1,0 +1,48 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: api-rest-tasker
+  labels:
+    app: api-rest-tasker
+spec:
+  selector:
+    app: api-rest-tasker
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 8080
+      targetPort: http
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-rest-tasker
+spec:
+  selector:
+    matchLabels:
+      app: api-rest-tasker
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: api-rest-tasker
+    spec:
+      containers:
+      - name: api-rest-tasker
+        image: eu-marseille-1.ocir.io/axds7s98uqrj/simple-task/api-rest-tasker:latest
+        imagePullPolicy: Always
+        command:
+          - java
+          - -jar
+          - /opt/app/api-rest-tasker-1.0.jar
+          - server
+          - config.yml
+        env:
+          - name: DBHOST
+            value: ddbb
+        ports:
+        - name: http
+          containerPort: 8080
+      imagePullSecrets:
+        - name: ocirsecret          
