@@ -30,5 +30,8 @@ public interface TaskDAO {
     @GetGeneratedKeys
     @RegisterBeanMapper(Task.class)
     Task update(@BindBean Task task);
-    
+
+    @SqlUpdate("delete from tasks where id = :id")
+    void delete(@Bind("id") Long id);
+
 }
