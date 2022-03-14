@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: ui-tasker
-        image: eu-marseille-1.ocir.io/axds7s98uqrj/simple-task/ui-tasker:1.0
+        image: eu-marseille-1.ocir.io/axds7s98uqrj/simple-task/ui-tasker:1.2
         imagePullPolicy: Always
         # Take this Ip or domain from a configmap that gets the value from terraform or some automated script, never hardcoded
         env:

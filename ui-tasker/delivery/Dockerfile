@@ -54,4 +54,4 @@ COPY ./delivery/nginx/files/image-error.png /etc/static_files/error/image-error.
 EXPOSE 80
 
 # Start Nginx server
-CMD ["/bin/bash", "-c", "/usr/share/nginx/html/env.sh && nginx"]
+CMD ["/bin/bash", "-c", "/usr/share/nginx/html/env.sh && nginx -g \"daemon off;\""]

@@ -58,8 +58,8 @@ For username you should use <Object Storage Namespace>/user@email and in the pas
 Tag the local images to point to registry:
 
 ```
-docker tag <image-id> eu-marseille-1.ocir.io/<namespace>/simple-task/ui-tasker:latest
-docker tag <image-id> eu-marseille-1.ocir.io/<namespace>/simple-task/api-rest-tasker:latest
+docker tag <image-id> eu-marseille-1.ocir.io/<namespace>/simple-task/ui-tasker:1.0
+docker tag <image-id> eu-marseille-1.ocir.io/<namespace>/simple-task/api-rest-tasker:1.0
 docker tag <image-id> eu-marseille-1.ocir.io/<namespace>/simple-task/postgres:11-5
 ```
 
