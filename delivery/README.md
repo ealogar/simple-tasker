@@ -40,13 +40,16 @@ docker login <region-key>.ocir.io
 For username you should use <Object Storage Namespace>/user@email and in the password and Auth token previously generated
 
 Tag the local images to point to registry:
-````
+
+```
 docker tag <image-id> eu-marseille-1.ocir.io/<namespace>/simple-task/ui-tasker:latest
 docker tag <image-id> eu-marseille-1.ocir.io/<namespace>/simple-task/api-rest-tasker:latest
 ```
+
 Push them to the registry with ```docker push <full-image-tag>```
 
 Create a secret for the application in k8s
+
 ```
 kubectl create secret docker-registry ocirsecret --docker-server=eu-marseille-1.ocir.io  --docker-username='<namespace>/ealogar@gmail.com' --docker-password='<auth-token>'  --docker-email='ealogar@gmail.com'
 ```
