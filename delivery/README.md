@@ -16,8 +16,11 @@ Following the guide [https://docs.oracle.com/en-us/iaas/developer-tutorials/tuto
 ## Prerequites
 
 Install [oci-cli](https://docs.oracle.com/en-us/iaas/Content/API/SDKDocs/cliinstall.htm).
+
 Install [fn cli](https://docs.oracle.com/en-us/iaas/Content/Functions/Tasks/functionsinstallfncli.htm)
+
 Create fn context (https://docs.oracle.com/en-us/iaas/Content/Functions/Tasks/functionscreatefncontext.htm).
+
 Generate an auth token for login to docker registry (https://docs.oracle.com/en-us/iaas/Content/Functions/Tasks/functionsgenerateauthtokens.htm#Generate_an_Auth_Token_to_Enable_Login_to_Oracle_Cloud_Infrastructure_Registry) and keep it safe.
 
 Install kubectl client if you dont already have it
@@ -62,8 +65,6 @@ kubectl apply -f templates/ui-tasker.yml
 kubectl apply -f templates/api-rest-tasker.yml
 kubectl apply -f templates/ddbb.yml
 ```
-
-https://github.com/KartikShrikantHegde/k8s
 
 ## Future
 
