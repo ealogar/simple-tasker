@@ -10,8 +10,6 @@ services:
       target: dev
     depends_on:
       - app-be
-    environment:
-      - BASEPATH_BE=http://app-be:8080
     expose:
       - "3000"
     ports:
@@ -43,12 +41,11 @@ services:
     depends_on:
       - api-rest-tasker
     environment:
-      - BASEPATH_BE=http://api-rest-tasker:8080
+      - BASEPATH_BE=http://localhost:8081
     expose:
       - "80"
     ports:
-      - "80:80"      
-
+      - "80:80"
 
   api-rest-tasker:
     build:
@@ -60,6 +57,12 @@ services:
       - provision-db   
     environment:
       - DBHOST=db      
+    expose:
+      - "8080"
+      - "8081"
+    ports:
+      - "8080:8080"
+      - "8081:8081"
 
   # Postgres database
   db:

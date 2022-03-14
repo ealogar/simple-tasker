@@ -5,22 +5,24 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: ui-tasker
+      lbtype: external
   replicas: 1
   template:
     metadata:
       labels:
+        lbtype: external
         app: ui-tasker
     spec:
       containers:
       - name: ui-tasker
-        image: eu-marseille-1.ocir.io/axds7s98uqrj/simple-task/ui-tasker:latest
+        image: eu-marseille-1.ocir.io/axds7s98uqrj/simple-task/ui-tasker:1.0
         imagePullPolicy: Always
+        # Take this Ip or domain from a configmap that gets the value from terraform or some automated script, never hardcoded
         env:
           - name: BASEPATH_BE
-            value: http://api-rest-tasker:8080
+            value: http://129.151.224.74:8080
         ports:
-        - name: app
+        - name: "ui-tasker"
           containerPort: 80
       imagePullSecrets:
         - name: ocirsecret

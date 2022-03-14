@@ -46,7 +46,7 @@ enjoy with kubectl ...
 Build the services images locally and push to the Oracle container registry
 
 ```
-COMPOSE_FILE=../../docker-compose.yml docker-compose build
+COMPOSE_FILE=../docker-compose.yml docker-compose build
 ```
 
 Log in to container registry:
@@ -71,16 +71,30 @@ Create a secret for the application in k8s
 kubectl create secret docker-registry ocirsecret --docker-server=eu-marseille-1.ocir.io  --docker-username='<namespace>/ealogar@gmail.com' --docker-password='<auth-token>'  --docker-email='ealogar@gmail.com'
 ```
 
-Remember to replace the placeholder for namespace and auth-token
+Remember to replace the placeholder for namespace and auth-token.
+
 
 Finally apply the kubernetes templates!
 
 ```
 kubectl apply -f templates/load-balancer.yml
-kubectl apply -f templates/ddbb.yml
 kubectl apply -f templates/ui-tasker.yml
+kubectl apply -f templates/ddbb.yml
 kubectl apply -f templates/api-rest-tasker.yml
 ```
+
+Wait until a public ip is assigned:
+
+```
+kubectl get services
+````
+
+when a public ip is assigned to the service you will see in LoadBalancer service:
+```
+ui-tasker-lb      LoadBalancer   10.96.159.147   <pending>     3000:32380/TCP   13m
+```
+
+Note: We had to manually create a Public IP resource in oracle cloud so that the load-balancer service of ui-tasker could get a public ip ... This will be fixed if we use terraform and provide the ips in a pool in advance.
 
 ## Future
 

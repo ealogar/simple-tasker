@@ -32,6 +32,14 @@ The build is minified and the filenames include the hashes.\
 
 Runs the test in CI mode (non interactive) and generate a coverage report.
 
+## Environment variables
+
+In react applications you should prefix the environment vars with REACT_APP_ for security (https://create-react-app.dev/docs/adding-custom-environment-variables/).
+
+We have used the ```.env``` and ```.env.production``` from now as react will bundle this in the containerized app, but this should be changed for production as we never will know the domain/ip adress of the service in buildtime (but in runtime).
+
+
+
 ## Learn More
 
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
