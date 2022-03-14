@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -51,6 +52,14 @@ public class TasksResource {
     public Task getTask(@PathParam("id") Long id ) {
         return taskDAO.getTaskById(id);
     }  
+
+    @DELETE
+    @Path("/{id}")
+    @Timed
+    @Metered(name = "delete-task")
+    public void deleteTask(@PathParam("id") Long id ) {
+        taskDAO.delete(id);
+    }
 
     @PUT
     @Path("/{id}")
