@@ -41,7 +41,7 @@ services:
     depends_on:
       - api-rest-tasker
     environment:
-      - BASEPATH_BE=http://localhost:8081
+      - BASEPATH_BE=http://localhost:8080
     expose:
       - "80"
     ports:

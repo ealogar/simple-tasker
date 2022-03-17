@@ -18,6 +18,7 @@ COPY public ./public
 # dynamic environment vars at runtime
 
 COPY env.sh .
+COPY .env .
 
 RUN ./env.sh
 
