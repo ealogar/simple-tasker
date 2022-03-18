@@ -6,7 +6,7 @@ metadata:
     app: tasker
 spec:
   type: LoadBalancer
-  loadBalancerIP: 129.151.224.74
+  loadBalancerIP: 129.151.252.213
   ports:
     - name: "ui-tasker"
       port: 80
